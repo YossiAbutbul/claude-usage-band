@@ -196,26 +196,42 @@ export const register: Register = on => {
       const pillH = collapsed ? 5 : 8
 
 
-      // Chevron alone: a Button's label is text only, so it is a glyph.
-      // ∧/∨ sit on the x-height in Segoe UI and system-ui; ⌃/⌄ ride high and low.
-      // One ⓘ for the whole band, its tooltip listing every window's reset. One hover scope, so
-      // two tooltips can never be open at once. Absolute, so revealing it moves nothing; no
-      // color set, so the text takes the theme's own text color.
-      const resetLines = rows.flatMap(({ kind, label, w }) => {
+      // One ⓘ for the whole band, its tooltip a small table of every window's reset. One hover
+      // scope, so two tooltips can never be open at once. Absolute, so revealing it moves
+      // nothing; the desktop draws it as a popover card. Text colors are the theme's own, apart
+      // from each window's level dot.
+      const resets = rows.flatMap(({ kind, label, w }) => {
         const reset = w ? resetParts(kind, at, w.resetsAt) : null
 
-        return reset ? [`${label} resets in ${reset.left} · ${reset.when}`] : []
+        return reset && w ? [{ kind, label, color: level(w.percentUsed).color, ...reset }] : []
       })
-      const resetInfo = resetLines.length > 0 && (
+      const resetInfo = resets.length > 0 && (
         <Box key="reset-info" alignItems="center">
-          <Svg source={INFO_ICON} alt={resetLines.join('; ')} width={INFO_SIZE} height={INFO_SIZE} />
-          <Box position="absolute" top={0} right={3} flexDirection="column" display="none" hover={{ display: 'flex' }}>
-            {resetLines.map(line => (
-              <Text wrap="truncate">{line}</Text>
+          <Svg
+            source={INFO_ICON}
+            alt={resets.map(r => `${r.label} resets in ${r.left}, ${r.when}`).join('; ')}
+            width={INFO_SIZE}
+            height={INFO_SIZE}
+          />
+          <Box position="absolute" top={0} right={3} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
+            <Text dimColor>Resets in</Text>
+            {resets.map(r => (
+              <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
+                <Text color={r.color}>●</Text>
+                <Box width={7}>
+                  <Text dimColor>{r.label}</Text>
+                </Box>
+                <Box width={8}>
+                  <Text bold>{r.left}</Text>
+                </Box>
+                <Text dimColor>{r.when}</Text>
+              </Box>
             ))}
           </Box>
         </Box>
       )
+
+      // Chevron alone: a Button's label is text only, so it is drawn as an image.
 
       const toggleControl = (
         <Box flexDirection="row" alignItems="center" gap={2}>
