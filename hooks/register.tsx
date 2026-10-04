@@ -33,6 +33,16 @@ const level = (pct: number) =>
 // Desktop draws real pixels: a rounded pill on a translucent track reads well on light and dark.
 const PILL_TRACK = 'rgba(128,128,128,0.28)'
 // A 1px hairline stretched to the slot's width: separates the band from the app's bar below it.
+// An outlined "i", drawn as a plain image. The reset detail beside it is revealed by the
+// surface's own hover (no sandboxed frame, so no opaque box behind the icon).
+const INFO_SIZE = 14
+const INFO_ICON =
+  `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
+  `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
+  `<circle cx="7" cy="7" r="5.6"/><line x1="7" y1="6.3" x2="7" y2="9.8"/></g>` +
+  `<circle cx="7" cy="4.3" r="0.8" fill="#8e8d89"/>` +
+  `</svg>`
+
 const DIVIDER =
   `<svg xmlns="http://www.w3.org/2000/svg" width="4000" height="1" viewBox="0 0 4000 1" preserveAspectRatio="none">` +
   `<rect width="4000" height="1" fill="rgba(128,128,128,0.25)"/></svg>`
@@ -183,10 +193,10 @@ export const register: Register = on => {
         </Box>
       )
 
-      // Word and chevron in one label: a Button's label is text only, so the chevron is a glyph
-      // and the whole "expand ⌃" is the click target.
+      // Word and chevron in one label: a Button's label is text only, so the chevron is a glyph.
+      // ∧/∨ sit on the x-height in Segoe UI and system-ui; ⌃/⌄ ride high and low.
       const toggleControl = (
-        <Button key="toggle" label={collapsed ? 'expand ⌃' : 'collapse ⌄'} plain dimColor onPress={toggle} />
+        <Button key="toggle" label={collapsed ? 'expand ∧' : 'collapse ∨'} plain dimColor onPress={toggle} />
       )
 
       const windowRow = ({ kind, short, label, w }: (typeof rows)[number]) => {
@@ -204,7 +214,12 @@ export const register: Register = on => {
               {w ? <Text bold color={color}>{`${Math.round(pct)}%`}</Text> : <Text dimColor>—</Text>}
             </Box>
             {reset && (
-              <Text dimColor>{collapsed ? `↻ ${reset.leftCompact}` : `↻ ${reset.left} · ${reset.when}`}</Text>
+              <Box key={`reset-${kind}`} flexDirection="row" alignItems="center" gap={1}>
+                <Svg source={INFO_ICON} alt={`Resets in ${reset.left}, ${reset.when}`} width={INFO_SIZE} height={INFO_SIZE} />
+                <Box display="none" hover={{ display: 'flex' }}>
+                  <Text dimColor>{`resets in ${reset.left} · ${reset.when}`}</Text>
+                </Box>
+              </Box>
             )}
           </Box>
         )
