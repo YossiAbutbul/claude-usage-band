@@ -8,7 +8,6 @@ const warned = atom({ plugin: 'usage-band', key: 'warned' } as const, [])
 const isCollapsed = atom({ plugin: 'usage-band', key: 'isCollapsed' } as const, false)
 const now = atom({ plugin: 'usage-band', key: 'now' } as const, 0)
 const cost = atom({ plugin: 'usage-band', key: 'cost' } as const, null)
-const chevronTurn = atom({ plugin: 'usage-band', key: 'chevronTurn' } as const, null)
 
 const COMMAND = 'usage-band'
 const SHOWN = [
@@ -39,10 +38,9 @@ const PILL_TRACK = 'rgba(128,128,128,0.28)'
 // surface's own hover (no sandboxed frame, so no opaque box behind the icon).
 // The collapse toggle's chevron: a rounded 1.75px stroke, the same gray as the info icon.
 const CHEVRON_SIZE = 16
-// `turn` rotates the down chevron about its center: 0 points down, 180 up.
-const chevron = (turn: number) =>
+const chevron = (dir: 'up' | 'down') =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">` +
-  `<path d="M4.5 6.5 8 10l3.5-3.5" transform="rotate(${turn.toFixed(1)} 8 8.25)" fill="none" stroke="#8e8d89" ` +
+  `<path d="${dir === 'up' ? 'M4.5 10 8 6.5l3.5 3.5' : 'M4.5 6.5 8 10l3.5-3.5'}" fill="none" stroke="#8e8d89" ` +
   `stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 
 const INFO_SIZE = 14
@@ -141,37 +139,6 @@ const setCollapsed = async ($: Engine, value: boolean) => {
   await $.store.set(COLLAPSED_KEY, value)
 }
 
-// Desktop chevron spin: the band flips at once, the chevron turns to match over SPIN_MS.
-// A press mid-spin turns back from wherever the chevron stands.
-const SPIN_MS = 200
-const FRAME_MS = 16
-const easeOut = (t: number) => 1 - (1 - t) ** 3
-let cancelSpin: (() => void) | null = null
-
-const toggleWithSpin = async ($: Engine) => {
-  cancelSpin?.()
-  cancelSpin = null
-  const wasCollapsed = await read($, isCollapsed)
-  const from = (await read($, chevronTurn)) ?? (wasCollapsed ? 180 : 0)
-  const to = wasCollapsed ? 0 : 180
-  await setCollapsed($, !wasCollapsed)
-
-  const start = await $.clock.now()
-  const duration = (SPIN_MS * Math.abs(to - from)) / 180
-  await update($, chevronTurn, () => from)
-  const cancel = $.clock.every(FRAME_MS, async () => {
-    const t = Math.min(1, ((await $.clock.now()) - start) / duration)
-    if (t < 1) {
-      await update($, chevronTurn, () => from + (to - from) * easeOut(t))
-      return
-    }
-    cancel()
-    if (cancelSpin === cancel) cancelSpin = null
-    await update($, chevronTurn, () => null)
-  })
-  cancelSpin = cancel
-}
-
 // Thin line meter for the collapsed row: heavy rule for the fill, a half-cell
 // cap for odd halves, light rule for the track. One text row, no block glyphs.
 const thinMeter = (pct: number, cells: number) => {
@@ -189,9 +156,6 @@ export const register: Register = on => {
     const result = await next(e)
 
     await $.command.register({ name: COMMAND, description: 'Collapse or expand the plan usage band' })
-
-    // A reload mid-spin drops its timer; let the chevron rest.
-    await update($, chevronTurn, () => null)
 
     const saved = await $.store.get(COLLAPSED_KEY)
     if (typeof saved === 'boolean') await update($, isCollapsed, () => saved)
@@ -240,7 +204,6 @@ export const register: Register = on => {
     const peak = Math.max(0, ...rows.map(r => r.w?.percentUsed ?? 0))
     const status = all.length === 0 ? null : level(peak)
     const toggle = () => setCollapsed($, !collapsed)
-    const turn = (await read($, chevronTurn)) ?? (collapsed ? 180 : 0)
     const spent = await read($, cost)
     const costText = spent === null ? null : formatUsd(spent)
     // Responsive: the band's width in cells (the terminal's width, or the transcript column's
@@ -315,9 +278,9 @@ export const register: Register = on => {
               The Button must be on top: an image over it swallows the click. Two blanks and the
               wrapper's side padding give the highlight room on either side of the chevron. */}
           <Box key="toggle-wrap" alignItems="center" justifyContent="center" paddingX={1}>
-            <Svg source={chevron(turn)} alt={collapsed ? 'Expand' : 'Collapse'} width={CHEVRON_SIZE} height={CHEVRON_SIZE} />
+            <Svg source={chevron(collapsed ? 'up' : 'down')} alt={collapsed ? 'Expand' : 'Collapse'} width={CHEVRON_SIZE} height={CHEVRON_SIZE} />
             <Box position="absolute" top={0} bottom={0} left={0} right={0} alignItems="center" justifyContent="center">
-              <Button key="toggle" label={'⠀⠀'} plain onPress={() => toggleWithSpin($)} />
+              <Button key="toggle" label={'⠀⠀'} plain onPress={toggle} />
             </Box>
           </Box>
         </Box>
