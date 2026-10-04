@@ -45,10 +45,9 @@ const chevron = (dir: 'up' | 'down') =>
 
 const INFO_SIZE = 14
 // Tooltip widths in cells: the expanded table (padding, dot, label 7, time 8, clock up to 9,
-// gaps) and the collapsed one-line form. And the hover group that ties the icon to its tooltip.
+// gaps) and the collapsed one-line form.
 const TIP_TABLE_WIDTH = 30
 const TIP_ROW_WIDTH = 46
-const TIP_SCOPE = 'usage-band-resets'
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
   `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
@@ -227,15 +226,13 @@ export const register: Register = on => {
 
         return reset && w ? [{ kind, label, color: level(w.percentUsed).color, ...reset }] : []
       })
-      // The desktop opens an absolute Box from its parent's left edge and ignores left/right
-      // offsets, so the tooltip cannot hang off the icon: it would run off the band's right side
-      // and under the panel beside the transcript. It hangs instead from a zero-width anchor at
-      // the end of the band's content, opening right into the free space before the icon. The
-      // anchor takes no room, so the layout is untouched. The icon and the tooltip share a hover
-      // group, so hovering the icon reveals it.
+      // The desktop opens an absolute Box from its parent's left edge, to the right, and ignores
+      // left/right offsets. So the ⓘ sits right after the band's content, not beside the chevron:
+      // its tooltip, nested in it and revealed by its hover, opens right into the band's free
+      // space instead of off the band's right edge under the panel beside the transcript.
       const tipWidth = collapsed ? TIP_ROW_WIDTH : TIP_TABLE_WIDTH
       const tip = collapsed ? (
-        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
+        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
           <Text dimColor>Resets in</Text>
           {resets.map((r, i) => (
             <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
@@ -247,7 +244,7 @@ export const register: Register = on => {
           ))}
         </Box>
       ) : (
-        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="column" paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
+        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
           <Text dimColor>Resets in</Text>
           {resets.map(r => (
             <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
@@ -263,19 +260,15 @@ export const register: Register = on => {
           ))}
         </Box>
       )
-      const tipAnchor = resets.length > 0 && (
-        <Box key="tip-anchor" width={0}>
-          {tip}
-        </Box>
-      )
       const resetInfo = resets.length > 0 && (
-        <Box key="reset-info" alignItems="center" hover={{ scope: TIP_SCOPE }}>
+        <Box key="reset-info" alignItems="center">
           <Svg
             source={INFO_ICON}
             alt={resets.map(r => `${r.label} resets in ${r.left}, ${r.when}`).join('; ')}
             width={INFO_SIZE}
             height={INFO_SIZE}
           />
+          {tip}
         </Box>
       )
 
@@ -283,7 +276,6 @@ export const register: Register = on => {
 
       const toggleControl = (
         <Box flexDirection="row" alignItems="center" gap={2}>
-          {resetInfo}
           {/* A Button's label is text only. The chevron image sets the control's size; a blank
               Button (a braille blank keeps its width) sits on top in an absolute Box spanning the
               chevron, centered, so it takes the click and its hover highlight frames the icon.
@@ -329,7 +321,7 @@ export const register: Register = on => {
                   <Text bold>{costText}</Text>
                 </Box>
               )}
-              {tipAnchor}
+              {resetInfo}
             </Box>
             {toggleControl}
           </Box>
@@ -342,7 +334,7 @@ export const register: Register = on => {
             <Box flexDirection="row" alignItems="center" gap={2}>
               <Text bold>✦ Plan usage</Text>
               {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
-              {tipAnchor}
+              {resetInfo}
             </Box>
             {toggleControl}
           </Box>
