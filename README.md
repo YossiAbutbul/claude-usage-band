@@ -59,7 +59,7 @@ claude --plugin-dir ./claude-usage-band
 | Action | How |
 | --- | --- |
 | Collapse or expand (desktop app) | Click **∨** / **∧** at the right of the band |
-| See when a window resets (desktop app) | Hover the ⓘ icon next to its percentage for a tooltip |
+| See when the windows reset (desktop app) | Hover the ⓘ icon next to ∨ / ∧ |
 | Collapse or expand (terminal) | Click **⌄** / **⌃** on the band |
 | Collapse or expand from the prompt | Type `/usage-band` |
 | Keyboard (terminal) | Focus the band, then press `u` |

@@ -195,14 +195,35 @@ export const register: Register = on => {
 
       // Chevron alone: a Button's label is text only, so it is a glyph.
       // ∧/∨ sit on the x-height in Segoe UI and system-ui; ⌃/⌄ ride high and low.
+      // One ⓘ for the whole band, its tooltip listing every window's reset. One hover scope, so
+      // two tooltips can never be open at once. Absolute, so revealing it moves nothing; no
+      // color set, so the text takes the theme's own text color.
+      const resetLines = rows.flatMap(({ kind, label, w }) => {
+        const reset = w ? resetParts(kind, at, w.resetsAt) : null
+
+        return reset ? [`${label} resets in ${reset.left} · ${reset.when}`] : []
+      })
+      const resetInfo = resetLines.length > 0 && (
+        <Box key="reset-info" alignItems="center">
+          <Svg source={INFO_ICON} alt={resetLines.join('; ')} width={INFO_SIZE} height={INFO_SIZE} />
+          <Box position="absolute" top={0} right={3} flexDirection="column" display="none" hover={{ display: 'flex' }}>
+            {resetLines.map(line => (
+              <Text wrap="truncate">{line}</Text>
+            ))}
+          </Box>
+        </Box>
+      )
+
       const toggleControl = (
-        <Button key="toggle" label={collapsed ? '∧' : '∨'} plain dimColor onPress={toggle} />
+        <Box flexDirection="row" alignItems="center" gap={2}>
+          {resetInfo}
+          <Button key="toggle" label={collapsed ? '∧' : '∨'} plain dimColor onPress={toggle} />
+        </Box>
       )
 
       const windowRow = ({ kind, short, label, w }: (typeof rows)[number]) => {
         const pct = w?.percentUsed ?? 0
         const color = w ? level(pct).color : PILL_TRACK
-        const reset = w ? resetParts(kind, at, w.resetsAt) : null
 
         return (
           <Box key={kind} flexDirection="row" alignItems="center" gap={1}>
@@ -213,16 +234,6 @@ export const register: Register = on => {
             <Box width={5}>
               {w ? <Text bold color={color}>{`${Math.round(pct)}%`}</Text> : <Text dimColor>—</Text>}
             </Box>
-            {reset && (
-              // Tooltip: an absolute Box leaves the flow, so revealing it moves nothing. No color
-              // set, so the text takes the theme's own text color.
-              <Box key={`reset-${kind}`} alignItems="center">
-                <Svg source={INFO_ICON} alt={`Resets in ${reset.left}, ${reset.when}`} width={INFO_SIZE} height={INFO_SIZE} />
-                <Box position="absolute" top={0} left={3} display="none" hover={{ display: 'flex' }}>
-                  <Text wrap="truncate">{`resets in ${reset.left} · ${reset.when}`}</Text>
-                </Box>
-              </Box>
-            )}
           </Box>
         )
       }
