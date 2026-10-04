@@ -1,0 +1,9 @@
+{
+  "name": "usage-band",
+  "version": "0.1.0",
+  "description": "Band above the prompt showing 5-hour and weekly Claude plan usage as progress bars",
+  "author": { "name": "Yossi Abutbul" },
+  "repository": "https://github.com/YossiAbutbul/claude-usage-band",
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
