@@ -20,7 +20,7 @@
     <text x="440" y="0" font-weight="700" fill="#3fb950">22%</text>
     <text x="478" y="0" fill="#8e8d89">↻ 3d4h</text>
 
-    <text x="782" y="0" fill="#8e8d89">▴</text>
+    <text x="782" y="0" fill="#8e8d89">⌃</text>
   </g>
 
   <!-- Expanded -->
@@ -30,7 +30,7 @@
 
   <text x="44" y="166" font-weight="700" fill="#ecebe8">✦ Plan usage</text>
   <text x="152" y="166" fill="#d29922">◆ moderate</text>
-  <text x="770" y="166" fill="#8e8d89">▾</text>
+  <text x="770" y="166" fill="#8e8d89">⌄</text>
 
   <g transform="translate(0,200)">
     <text x="44" y="0" fill="#8e8d89">5-hour</text>

@@ -201,7 +201,7 @@ export const register: Register = on => {
               <Text color={status?.color ?? 'gray'}>✦</Text>
               {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
             </Box>
-            <Button key="toggle" label="▴" plain dimColor onPress={toggle} />
+            <Button key="toggle" label="⌃" plain dimColor onPress={toggle} />
           </Box>
         )
       }
@@ -213,7 +213,7 @@ export const register: Register = on => {
               <Text bold>✦ Plan usage</Text>
               {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
             </Box>
-            <Button key="toggle" label="▾" plain dimColor onPress={toggle} />
+            <Button key="toggle" label="⌄" plain dimColor onPress={toggle} />
           </Box>
           {rows.map(windowRow)}
         </Box>
@@ -222,7 +222,7 @@ export const register: Register = on => {
 
     const { Box, Text, Button } = $.ui.resolve(e)
 
-    // One thin line: ✦ 5h ━━━━━━╸───── 53% ↻2h14m  ·  7d ━━╸───────── 22% ↻3d4h      ▴
+    // One thin line: ✦ 5h ━━━━━━╸───── 53% ↻2h14m  ·  7d ━━╸───────── 22% ↻3d4h      ⌃
     if (collapsed) {
       return (
         <Box flexDirection="row" justifyContent="space-between" paddingX={1}>
@@ -251,7 +251,7 @@ export const register: Register = on => {
               })
             )}
           </Box>
-          <Button key="toggle" label="▴" plain dimColor hotkey="u" onPress={toggle} />
+          <Button key="toggle" label="⌃" plain dimColor hotkey="u" onPress={toggle} />
         </Box>
       )
     }
@@ -263,7 +263,7 @@ export const register: Register = on => {
             <Text bold>✦ Plan usage</Text>
             {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
           </Box>
-          <Button key="toggle" label="▾" plain dimColor hotkey="u" onPress={toggle} />
+          <Button key="toggle" label="⌄" plain dimColor hotkey="u" onPress={toggle} />
         </Box>
 
         {rows.map(({ kind, label, w }) => {

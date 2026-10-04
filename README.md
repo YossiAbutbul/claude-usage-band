@@ -9,13 +9,13 @@ In the terminal it draws with text characters:
 ```
 Expanded
 ╭──────────────────────────────────────────────────────────────╮
-│ ✦ Plan usage  ◆ moderate                                   ▾ │
+│ ✦ Plan usage  ◆ moderate                                   ⌄ │
 │ 5-hour  ████████████▋───────────  53%  ↻ 2h 14m · 14:30      │
 │ Weekly  █████▍──────────────────  22%  ↻ 3d 4h · Thu 09:00   │
 ╰──────────────────────────────────────────────────────────────╯
 
 Collapsed
- ✦ 5h ━━━━━━╸───── 53% ↻ 2h14m  ·  7d ━━╸───────── 22% ↻ 3d4h        ▴
+ ✦ 5h ━━━━━━╸───── 53% ↻ 2h14m  ·  7d ━━╸───────── 22% ↻ 3d4h        ⌃
 ```
 
 ## Features
@@ -24,7 +24,7 @@ Collapsed
 - **Color by level:** green under 50%, amber from 50–80%, red over 80%. The ✦ icon takes the color of the higher window.
 - **Reset countdown:** shows how long until each window resets, plus the clock time, updated every minute.
 - **Warning toast:** one notification when a window passes 90%, once per reset period.
-- **Collapse to one line:** ▾ / ▴ switches between the card and a single thin line. Your choice is remembered across sessions.
+- **Collapse to one line:** ⌄ / ⌃ switches between the card and a single thin line. Your choice is remembered across sessions.
 - **Works in the terminal and the desktop app.**
 
 ## Requirements
@@ -80,7 +80,7 @@ claude --plugin-dir ~/.claude/mods/usage-band
 
 | Action | How |
 | --- | --- |
-| Collapse or expand | Click **▾** / **▴** on the band |
+| Collapse or expand | Click **⌄** / **⌃** on the band |
 | Collapse or expand from the prompt | Type `/usage-band` |
 | Keyboard (terminal) | Focus the band, then press `u` |
 
