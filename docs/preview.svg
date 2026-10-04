@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" font-family="-apple-system, 'Segoe UI', system-ui, sans-serif" font-size="13">
+  <!-- Preview of usage-band in the Claude desktop app: same pill geometry and colors as hooks/register.tsx -->
+  <rect width="820" height="300" rx="12" fill="#1f1e1c"/>
+
+  <!-- Collapsed -->
+  <text x="24" y="30" font-size="10.5" letter-spacing="1" fill="#7a7975">COLLAPSED</text>
+  <rect x="16" y="42" width="788" height="40" rx="8" fill="#262624"/>
+  <g transform="translate(0,66)">
+    <text x="32" y="0" fill="#d29922">✦</text>
+
+    <text x="56" y="0" fill="#8e8d89">5h</text>
+    <rect x="80" y="-8.5" width="84" height="5" rx="2.5" fill="rgba(128,128,128,0.28)"/>
+    <rect x="80" y="-8.5" width="45" height="5" rx="2.5" fill="#d29922"/>
+    <text x="176" y="0" font-weight="700" fill="#d29922">53%</text>
+    <text x="214" y="0" fill="#8e8d89">↻ 2h14m</text>
+
+    <text x="320" y="0" fill="#8e8d89">7d</text>
+    <rect x="344" y="-8.5" width="84" height="5" rx="2.5" fill="rgba(128,128,128,0.28)"/>
+    <rect x="344" y="-8.5" width="18" height="5" rx="2.5" fill="#3fb950"/>
+    <text x="440" y="0" font-weight="700" fill="#3fb950">22%</text>
+    <text x="478" y="0" fill="#8e8d89">↻ 3d4h</text>
+
+    <text x="782" y="0" fill="#8e8d89">▴</text>
+  </g>
+
+  <!-- Expanded -->
+  <text x="24" y="114" font-size="10.5" letter-spacing="1" fill="#7a7975">EXPANDED</text>
+  <rect x="16" y="126" width="788" height="140" rx="8" fill="#262624"/>
+  <rect x="28" y="138" width="764" height="116" rx="10" fill="none" stroke="#45443f"/>
+
+  <text x="44" y="166" font-weight="700" fill="#ecebe8">✦ Plan usage</text>
+  <text x="152" y="166" fill="#d29922">◆ moderate</text>
+  <text x="770" y="166" fill="#8e8d89">▾</text>
+
+  <g transform="translate(0,200)">
+    <text x="44" y="0" fill="#8e8d89">5-hour</text>
+    <rect x="112" y="-9" width="220" height="8" rx="4" fill="rgba(128,128,128,0.28)"/>
+    <rect x="112" y="-9" width="117" height="8" rx="4" fill="#d29922"/>
+    <text x="346" y="0" font-weight="700" fill="#d29922">53%</text>
+    <text x="392" y="0" fill="#8e8d89">↻ 2h 14m · 14:30</text>
+  </g>
+  <g transform="translate(0,230)">
+    <text x="44" y="0" fill="#8e8d89">Weekly</text>
+    <rect x="112" y="-9" width="220" height="8" rx="4" fill="rgba(128,128,128,0.28)"/>
+    <rect x="112" y="-9" width="48" height="8" rx="4" fill="#3fb950"/>
+    <text x="346" y="0" font-weight="700" fill="#3fb950">22%</text>
+    <text x="392" y="0" fill="#8e8d89">↻ 3d 4h · Thu 09:00</text>
+  </g>
+
+  <text x="796" y="288" font-size="10" text-anchor="end" fill="#5f5e5a">Preview · Claude desktop app</text>
+</svg>

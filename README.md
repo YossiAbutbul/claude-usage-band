@@ -2,6 +2,10 @@
 
 A slim band above the Claude Code prompt that shows how much of your Claude plan you've used: the **5-hour** window and the **weekly** limit, each with a progress bar, a percentage and a countdown to its reset.
 
+![usage-band in the Claude desktop app, collapsed and expanded](docs/preview.svg)
+
+In the terminal it draws with text characters:
+
 ```
 Expanded
 ╭──────────────────────────────────────────────────────────────╮
@@ -13,8 +17,6 @@ Expanded
 Collapsed
  ✦ 5h ━━━━━━╸───── 53% ↻ 2h14m  ·  7d ━━╸───────── 22% ↻ 3d4h        ▴
 ```
-
-In the Claude desktop app (Code tab), the bars are drawn as smooth rounded pills instead of text characters.
 
 ## Features
 
