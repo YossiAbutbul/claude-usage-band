@@ -4,7 +4,7 @@ A slim band above the Claude Code prompt that shows how much of your Claude plan
 
 **Works in the Claude desktop app** (the Code tab on Windows and macOS) **and in the Claude Code terminal.** In the desktop app it draws native rounded bars, icons and a hover tooltip; in the terminal it uses text characters.
 
-![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview-dark.svg)
+![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview-0.4.svg)
 
 In the terminal it draws with text characters:
 
@@ -24,6 +24,7 @@ Collapsed
 
 - **Two windows:** the 5-hour limit and the weekly limit, side by side.
 - **Color by level:** green under 50%, amber from 50–80%, red over 80%. The ✦ icon takes the color of the higher window.
+- **Session cost:** what this session has cost so far, the same total `/cost` shows, next to the bars.
 - **Reset countdown:** shows how long until each window resets, plus the clock time, updated every minute.
 - **Warning toast:** one notification when a window passes 90%, once per reset period.
 - **Responsive:** the band sizes itself to the window. Bars shrink as it narrows, and on a narrow window the collapsed line keeps just the percentages.

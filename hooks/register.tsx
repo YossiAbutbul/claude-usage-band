@@ -7,6 +7,7 @@ const windows = atom({ plugin: 'usage-band', key: 'windows' } as const, [])
 const warned = atom({ plugin: 'usage-band', key: 'warned' } as const, [])
 const isCollapsed = atom({ plugin: 'usage-band', key: 'isCollapsed' } as const, false)
 const now = atom({ plugin: 'usage-band', key: 'now' } as const, 0)
+const cost = atom({ plugin: 'usage-band', key: 'cost' } as const, null)
 
 const COMMAND = 'usage-band'
 const SHOWN = [
@@ -73,6 +74,9 @@ const meter = (pct: number, cells: number) => {
 }
 
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n))
+
+// The session's running cost, as /cost totals it, to the cent.
+const formatUsd = (usd: number) => (usd >= 0.01 || usd === 0 ? `$${usd.toFixed(2)}` : '<$0.01')
 
 const pad2 = (n: number) => String(n).padStart(2, '0')
 
@@ -152,6 +156,8 @@ export const register: Register = on => {
 
     const usage = await $.session.usage()
     if (usage.rateLimits.length > 0) await store($, usage.rateLimits)
+    const startUsd = usage.cost?.usd
+    if (startUsd !== undefined) await update($, cost, () => startUsd)
 
     const at = await $.clock.now()
     await update($, now, () => at)
@@ -172,6 +178,8 @@ export const register: Register = on => {
 
   on('session.measure', async ($, e, next) => {
     if (e.changed.includes('rateLimits')) await store($, e.rateLimits)
+    const usd = e.cost?.usd
+    if (usd !== undefined && e.changed.includes('cost')) await update($, cost, () => usd)
 
     return next(e)
   })
@@ -190,6 +198,8 @@ export const register: Register = on => {
     const peak = Math.max(0, ...rows.map(r => r.w?.percentUsed ?? 0))
     const status = all.length === 0 ? null : level(peak)
     const toggle = () => setCollapsed($, !collapsed)
+    const spent = await read($, cost)
+    const costText = spent === null ? null : formatUsd(spent)
     // Responsive: the band's width in cells (the terminal's width, or the transcript column's
     // on desktop) drives every size below, so it never wraps or crowds on a narrow window.
     const cols = e.props.bodyColumns || 100
@@ -282,6 +292,12 @@ export const register: Register = on => {
             <Box flexDirection="row" alignItems="center" gap={cols >= 64 ? 3 : 2}>
               <Text color={status?.color ?? 'gray'}>✦</Text>
               {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
+              {costText && (
+                <Box key="cost" flexDirection="row" alignItems="center" gap={1}>
+                  <Text dimColor>session</Text>
+                  <Text bold>{costText}</Text>
+                </Box>
+              )}
             </Box>
             {toggleControl}
           </Box>
@@ -298,6 +314,15 @@ export const register: Register = on => {
             {toggleControl}
           </Box>
           {rows.map(windowRow)}
+          {costText && (
+            <Box key="cost" flexDirection="row" alignItems="center" gap={1}>
+              <Box width={8}>
+                <Text dimColor>Session</Text>
+              </Box>
+              <Text bold>{costText}</Text>
+              <Text dimColor>spent so far</Text>
+            </Box>
+          )}
         </Box>
       )
     }
@@ -336,6 +361,7 @@ export const register: Register = on => {
                 )
               })
             )}
+            {costText && <Text dimColor>{'  ·  '}<Text bold>{costText}</Text></Text>}
           </Box>
           <Button key="toggle" label="⌃" plain dimColor hotkey="u" onPress={toggle} />
         </Box>
@@ -385,6 +411,13 @@ export const register: Register = on => {
             </Box>
           )
         })}
+        {costText && (
+          <Box key="cost" flexDirection="row" gap={1}>
+            <Text dimColor>{'Session'.padEnd(LABEL_WIDTH)}</Text>
+            <Text bold>{costText}</Text>
+            <Text dimColor>spent so far</Text>
+          </Box>
+        )}
       </Box>
     )
     })()
