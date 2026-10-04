@@ -4,7 +4,7 @@ A slim band above the Claude Code prompt that shows how much of your Claude plan
 
 **Works in the Claude desktop app** (the Code tab on Windows and macOS) **and in the Claude Code terminal.** In the desktop app it draws native rounded bars, icons and a hover tooltip; in the terminal it uses text characters.
 
-![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview-0.4.7.svg)
+![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview-0.4.8.svg)
 
 In the terminal it draws with text characters:
 
@@ -64,7 +64,7 @@ claude --plugin-dir ./claude-usage-band
 | Action | How |
 | --- | --- |
 | Collapse or expand (desktop app) | Click the chevron at the right of the band |
-| See when the windows reset (desktop app) | Hover the ⓘ icon after the bars |
+| See when the windows reset (desktop app) | Hover the ⓘ icon next to the chevron |
 | Collapse or expand (terminal) | Click **⌄** / **⌃** on the band |
 | Collapse or expand from the prompt | Type `/usage-band` |
 | Keyboard (terminal) | Focus the band, then press `u` |
