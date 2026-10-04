@@ -223,11 +223,12 @@ export const register: Register = on => {
           {/* A Button's label is text only. The chevron image sets the control's size; a blank
               Button (a braille blank keeps its width) sits on top in an absolute Box spanning the
               chevron, centered, so it takes the click and its hover highlight frames the icon.
-              The Button must be on top: an image over it swallows the click. */}
-          <Box key="toggle-wrap" alignItems="center" justifyContent="center">
+              The Button must be on top: an image over it swallows the click. Two blanks and the
+              wrapper's side padding give the highlight room on either side of the chevron. */}
+          <Box key="toggle-wrap" alignItems="center" justifyContent="center" paddingX={1}>
             <Svg source={chevron(collapsed ? 'up' : 'down')} alt={collapsed ? 'Expand' : 'Collapse'} width={CHEVRON_SIZE} height={CHEVRON_SIZE} />
             <Box position="absolute" top={0} bottom={0} left={0} right={0} alignItems="center" justifyContent="center">
-              <Button key="toggle" label={'⠀'} plain onPress={toggle} />
+              <Button key="toggle" label={'⠀⠀'} plain onPress={toggle} />
             </Box>
           </Box>
         </Box>
