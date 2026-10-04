@@ -12,6 +12,8 @@ declare module 'claude-code' {
       now: number
       /** The session's running cost in US dollars, as /cost totals it; null before the first priced response. */
       cost: number | null
+      /** The desktop chevron's angle mid-spin (0 down, 180 up); null at rest. */
+      chevronTurn: number | null
     }
   }
 }
