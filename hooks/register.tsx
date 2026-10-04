@@ -48,6 +48,8 @@ const INFO_SIZE = 14
 // clock when collapsed, with it (up to 9) when expanded.
 const TIP_COMPACT_WIDTH = 16
 const TIP_FULL_WIDTH = 26
+// How far right of the strip's left edge the tooltip should sit, in cells.
+const TIP_NUDGE = 3
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
   `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
@@ -249,10 +251,11 @@ export const register: Register = on => {
           ))}
         </Box>
       )
-      // The hover area is a strip as wide as the tooltip with the ⓘ at its right end: the
-      // desktop opens the tooltip from the hover area's own left edge, so it ends at the ⓘ.
+      // The hover area is a strip just narrower than the tooltip, with the ⓘ at its right end:
+      // the desktop opens the tooltip from the hover area's own left edge, so it ends at the ⓘ,
+      // TIP_NUDGE cells past it so it sits under the icon rather than short of it.
       const resetInfo = resets.length > 0 && (
-        <Box key="reset-info" width={tipWidth} flexDirection="row" alignItems="center" justifyContent="flex-end">
+        <Box key="reset-info" width={tipWidth - TIP_NUDGE} flexDirection="row" alignItems="center" justifyContent="flex-end">
           <Svg
             source={INFO_ICON}
             alt={resets.map(r => `${r.label} resets in ${r.left}, ${r.when}`).join('; ')}
