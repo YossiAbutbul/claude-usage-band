@@ -45,12 +45,10 @@ const chevron = (dir: 'up' | 'down') =>
 
 const INFO_SIZE = 14
 // Tooltip widths in cells: the expanded table (padding, dot, label 7, time 8, clock up to 9,
-// gaps) and the collapsed one-line form; the 14px info icon's width in cells; and the hover
-// group that ties the icon to its tooltip.
+// gaps) and the collapsed one-line form; and the 14px info icon's width in cells.
 const TIP_TABLE_WIDTH = 30
 const TIP_ROW_WIDTH = 46
 const INFO_CELLS = 2
-const TIP_SCOPE = 'usage-band-resets'
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
   `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
@@ -229,16 +227,16 @@ export const register: Register = on => {
 
         return reset && w ? [{ kind, label, color: level(w.percentUsed).color, ...reset }] : []
       })
-      // The desktop opens an absolute Box from its parent's left edge, to the right, and ignores
-      // left/right offsets; a tooltip nested in the ⓘ would run off the band's right edge under
-      // the panel beside the transcript. So the tooltip hangs from an anchor as wide as itself,
-      // pinned to the right end of a filler that takes only the band's leftover space (it grows
-      // from zero, so it squeezes nothing) and spills left out of it. The tooltip opens from the
-      // anchor's left edge and so ends at the ⓘ, opening toward the band's center. The ⓘ and the
-      // tooltip share a hover group, since the tooltip is no longer inside the ⓘ.
+      // The desktop draws a hover-revealed Box as a popover opening rightward from its parent's
+      // left edge, ignoring its own offsets, so one nested straight in the ⓘ runs off the band's
+      // right edge under the panel beside the transcript. Hover groups across separate Boxes do
+      // not reveal on the desktop, so the tooltip must stay inside the ⓘ's keyed Box. It sits in
+      // an always-present, invisible absolute anchor that the ⓘ holds, placed (plain absolute
+      // offsets are honored) one tooltip-width to the icon's left: the popover opens from the
+      // anchor's left edge and ends at the ⓘ, toward the band's center. Absolute, so no layout.
       const tipWidth = collapsed ? TIP_ROW_WIDTH : TIP_TABLE_WIDTH
       const tip = collapsed ? (
-        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
+        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
           <Text dimColor>Resets in</Text>
           {resets.map((r, i) => (
             <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
@@ -250,7 +248,7 @@ export const register: Register = on => {
           ))}
         </Box>
       ) : (
-        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="column" paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
+        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
           <Text dimColor>Resets in</Text>
           {resets.map(r => (
             <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
@@ -266,21 +264,17 @@ export const register: Register = on => {
           ))}
         </Box>
       )
-      const tipFiller = resets.length > 0 && (
-        <Box key="tip-filler" flexGrow={1} width={0} flexDirection="row" justifyContent="flex-end">
-          <Box width={tipWidth - INFO_CELLS} flexShrink={0}>
-            {tip}
-          </Box>
-        </Box>
-      )
       const resetInfo = resets.length > 0 && (
-        <Box key="reset-info" alignItems="center" hover={{ scope: TIP_SCOPE }}>
+        <Box key="reset-info" alignItems="center">
           <Svg
             source={INFO_ICON}
             alt={resets.map(r => `${r.label} resets in ${r.left}, ${r.when}`).join('; ')}
             width={INFO_SIZE}
             height={INFO_SIZE}
           />
+          <Box position="absolute" top={0} left={-(tipWidth - INFO_CELLS)} width={tipWidth}>
+            {tip}
+          </Box>
         </Box>
       )
 
@@ -335,7 +329,6 @@ export const register: Register = on => {
                 </Box>
               )}
             </Box>
-            {tipFiller}
             {toggleControl}
           </Box>
         )
@@ -348,7 +341,6 @@ export const register: Register = on => {
               <Text bold>✦ Plan usage</Text>
               {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
             </Box>
-            {tipFiller}
             {toggleControl}
           </Box>
           {rows.map(windowRow)}
