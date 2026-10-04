@@ -44,11 +44,10 @@ const chevron = (dir: 'up' | 'down') =>
   `stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 
 const INFO_SIZE = 14
-// Tooltip widths in cells: the expanded table (padding, dot, label 7, time 8, clock up to 9,
-// gaps) and the collapsed one-line form; and the 14px info icon's width in cells.
-const TIP_TABLE_WIDTH = 30
-const TIP_ROW_WIDTH = 46
-const INFO_CELLS = 2
+// Tooltip widths in cells (padding, dot, window 2, time left 7, gaps): without the reset
+// clock when collapsed, with it (up to 9) when expanded.
+const TIP_COMPACT_WIDTH = 16
+const TIP_FULL_WIDTH = 26
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
   `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
@@ -222,59 +221,45 @@ export const register: Register = on => {
       // scope, so two tooltips can never be open at once. Absolute, so revealing it moves
       // nothing; the desktop draws it as a popover card. Text colors are the theme's own, apart
       // from each window's level dot.
-      const resets = rows.flatMap(({ kind, label, w }) => {
+      const resets = rows.flatMap(({ kind, label, short, w }) => {
         const reset = w ? resetParts(kind, at, w.resetsAt) : null
 
-        return reset && w ? [{ kind, label, color: level(w.percentUsed).color, ...reset }] : []
+        return reset && w ? [{ kind, label, short, color: level(w.percentUsed).color, ...reset }] : []
       })
-      // The desktop draws a hover-revealed Box as a popover opening rightward from its parent's
-      // left edge, ignoring its own offsets, so one nested straight in the ⓘ runs off the band's
-      // right edge under the panel beside the transcript. Hover groups across separate Boxes do
-      // not reveal on the desktop, so the tooltip must stay inside the ⓘ's keyed Box. It sits in
-      // an always-present, invisible absolute anchor that the ⓘ holds, placed (plain absolute
-      // offsets are honored) one tooltip-width to the icon's left: the popover opens from the
-      // anchor's left edge and ends at the ⓘ, toward the band's center. Absolute, so no layout.
-      const tipWidth = collapsed ? TIP_ROW_WIDTH : TIP_TABLE_WIDTH
-      const tip = collapsed ? (
-        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
-          <Text dimColor>Resets in</Text>
-          {resets.map((r, i) => (
-            <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
-              {i > 0 && <Text dimColor>·</Text>}
-              <Text color={r.color}>●</Text>
-              <Text dimColor>{r.label}</Text>
-              <Text bold>{r.leftCompact}</Text>
-            </Box>
-          ))}
-        </Box>
-      ) : (
+      // The desktop draws a hover-revealed Box as a popover opening rightward from the left edge
+      // of its hover area (the nearest keyed Box), ignoring every offset; and hover groups across
+      // separate Boxes do not reveal there. So the tooltip stays inside the ⓘ's hover area, and
+      // that area is made as wide as the tooltip, with the ⓘ at its right end. The tooltip is a
+      // compact table (window, time left, and the clock when expanded) so the strip stays narrow.
+      const tipWidth = collapsed ? TIP_COMPACT_WIDTH : TIP_FULL_WIDTH
+      const tip = (
         <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
           <Text dimColor>Resets in</Text>
           {resets.map(r => (
             <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
               <Text color={r.color}>●</Text>
-              <Box width={7}>
-                <Text dimColor>{r.label}</Text>
+              <Box width={2}>
+                <Text dimColor>{r.short}</Text>
               </Box>
-              <Box width={8}>
+              <Box width={7}>
                 <Text bold>{r.left}</Text>
               </Box>
-              <Text dimColor>{r.when}</Text>
+              {!collapsed && <Text dimColor>{r.when}</Text>}
             </Box>
           ))}
         </Box>
       )
+      // The hover area is a strip as wide as the tooltip with the ⓘ at its right end: the
+      // desktop opens the tooltip from the hover area's own left edge, so it ends at the ⓘ.
       const resetInfo = resets.length > 0 && (
-        <Box key="reset-info" alignItems="center">
+        <Box key="reset-info" width={tipWidth} flexDirection="row" alignItems="center" justifyContent="flex-end">
           <Svg
             source={INFO_ICON}
             alt={resets.map(r => `${r.label} resets in ${r.left}, ${r.when}`).join('; ')}
             width={INFO_SIZE}
             height={INFO_SIZE}
           />
-          <Box position="absolute" top={0} left={-(tipWidth - INFO_CELLS)} width={tipWidth}>
-            {tip}
-          </Box>
+          {tip}
         </Box>
       )
 
