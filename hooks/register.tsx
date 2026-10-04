@@ -32,6 +32,16 @@ const level = (pct: number) =>
 
 // Desktop draws real pixels: a rounded pill on a translucent track reads well on light and dark.
 const PILL_TRACK = 'rgba(128,128,128,0.28)'
+const CHEVRON_SIZE = 12
+const chevron = (dir: 'up' | 'down') => {
+  const points = dir === 'up' ? '3,7.5 6,4.5 9,7.5' : '3,4.5 6,7.5 9,4.5'
+
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">` +
+    `<polyline points="${points}" fill="none" stroke="#8e8d89" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>` +
+    `</svg>`
+  )
+}
 const pill = (pct: number, color: string, width: number, height: number) => {
   const r = height / 2
   const fill = pct <= 0 ? 0 : Math.max(height, Math.round((Math.min(100, pct) / 100) * width))
@@ -173,6 +183,19 @@ export const register: Register = on => {
       const pillW = collapsed ? 84 : 220
       const pillH = collapsed ? 5 : 8
 
+      // A dim word with a drawn chevron after it: only a text Button takes presses, so the word is the target.
+      const toggleControl = (
+        <Box key="toggle-wrap" flexDirection="row" alignItems="center" gap={1}>
+          <Button key="toggle" label={collapsed ? 'expand' : 'collapse'} plain dimColor onPress={toggle} />
+          <Svg
+            source={chevron(collapsed ? 'up' : 'down')}
+            alt={collapsed ? 'Expand' : 'Collapse'}
+            width={CHEVRON_SIZE}
+            height={CHEVRON_SIZE}
+          />
+        </Box>
+      )
+
       const windowRow = ({ kind, short, label, w }: (typeof rows)[number]) => {
         const pct = w?.percentUsed ?? 0
         const color = w ? level(pct).color : PILL_TRACK
@@ -201,19 +224,19 @@ export const register: Register = on => {
               <Text color={status?.color ?? 'gray'}>✦</Text>
               {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
             </Box>
-            <Button key="toggle" label="⌃" plain dimColor onPress={toggle} />
+            {toggleControl}
           </Box>
         )
       }
 
       return (
-        <Box flexDirection="column" borderStyle="round" borderColor="gray" paddingX={1} gap={0}>
+        <Box flexDirection="column" paddingX={1} gap={0}>
           <Box flexDirection="row" alignItems="center" justifyContent="space-between">
             <Box flexDirection="row" alignItems="center" gap={2}>
               <Text bold>✦ Plan usage</Text>
               {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
             </Box>
-            <Button key="toggle" label="⌄" plain dimColor onPress={toggle} />
+            {toggleControl}
           </Box>
           {rows.map(windowRow)}
         </Box>

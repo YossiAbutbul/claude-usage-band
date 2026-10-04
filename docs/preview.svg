@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="820" height="300" viewBox="0 0 820 300" font-family="-apple-system, 'Segoe UI', system-ui, sans-serif" font-size="13">
-  <!-- Preview of usage-band in the Claude desktop app: same pill geometry and colors as hooks/register.tsx -->
-  <rect width="820" height="300" rx="12" fill="#1f1e1c"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="820" height="250" viewBox="0 0 820 250" font-family="-apple-system, 'Segoe UI', system-ui, sans-serif" font-size="13">
+  <!-- Preview of usage-band in the Claude desktop app: same pill geometry, colors and chevron as hooks/register.tsx -->
+  <rect width="820" height="250" rx="12" fill="#1f1e1c"/>
 
   <!-- Collapsed -->
   <text x="24" y="30" font-size="10.5" letter-spacing="1" fill="#7a7975">COLLAPSED</text>
@@ -20,32 +20,35 @@
     <text x="440" y="0" font-weight="700" fill="#3fb950">22%</text>
     <text x="478" y="0" fill="#8e8d89">↻ 3d4h</text>
 
-    <text x="782" y="0" fill="#8e8d89">⌃</text>
+    <text x="772" y="0" text-anchor="end" fill="#8e8d89">expand</text>
+    <polyline transform="translate(778,-10.5)" points="3,7.5 6,4.5 9,7.5" fill="none" stroke="#8e8d89" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 
   <!-- Expanded -->
   <text x="24" y="114" font-size="10.5" letter-spacing="1" fill="#7a7975">EXPANDED</text>
-  <rect x="16" y="126" width="788" height="140" rx="8" fill="#262624"/>
-  <rect x="28" y="138" width="764" height="116" rx="10" fill="none" stroke="#45443f"/>
+  <rect x="16" y="126" width="788" height="104" rx="8" fill="#262624"/>
 
-  <text x="44" y="166" font-weight="700" fill="#ecebe8">✦ Plan usage</text>
-  <text x="152" y="166" fill="#d29922">◆ moderate</text>
-  <text x="770" y="166" fill="#8e8d89">⌄</text>
-
-  <g transform="translate(0,200)">
-    <text x="44" y="0" fill="#8e8d89">5-hour</text>
-    <rect x="112" y="-9" width="220" height="8" rx="4" fill="rgba(128,128,128,0.28)"/>
-    <rect x="112" y="-9" width="117" height="8" rx="4" fill="#d29922"/>
-    <text x="346" y="0" font-weight="700" fill="#d29922">53%</text>
-    <text x="392" y="0" fill="#8e8d89">↻ 2h 14m · 14:30</text>
-  </g>
-  <g transform="translate(0,230)">
-    <text x="44" y="0" fill="#8e8d89">Weekly</text>
-    <rect x="112" y="-9" width="220" height="8" rx="4" fill="rgba(128,128,128,0.28)"/>
-    <rect x="112" y="-9" width="48" height="8" rx="4" fill="#3fb950"/>
-    <text x="346" y="0" font-weight="700" fill="#3fb950">22%</text>
-    <text x="392" y="0" fill="#8e8d89">↻ 3d 4h · Thu 09:00</text>
+  <g transform="translate(0,154)">
+    <text x="32" y="0" font-weight="700" fill="#ecebe8">✦ Plan usage</text>
+    <text x="140" y="0" fill="#d29922">◆ moderate</text>
+    <text x="772" y="0" text-anchor="end" fill="#8e8d89">collapse</text>
+    <polyline transform="translate(778,-10.5)" points="3,4.5 6,7.5 9,4.5" fill="none" stroke="#8e8d89" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
 
-  <text x="796" y="288" font-size="10" text-anchor="end" fill="#5f5e5a">Preview · Claude desktop app</text>
+  <g transform="translate(0,186)">
+    <text x="32" y="0" fill="#8e8d89">5-hour</text>
+    <rect x="100" y="-9" width="220" height="8" rx="4" fill="rgba(128,128,128,0.28)"/>
+    <rect x="100" y="-9" width="117" height="8" rx="4" fill="#d29922"/>
+    <text x="334" y="0" font-weight="700" fill="#d29922">53%</text>
+    <text x="380" y="0" fill="#8e8d89">↻ 2h 14m · 14:30</text>
+  </g>
+  <g transform="translate(0,212)">
+    <text x="32" y="0" fill="#8e8d89">Weekly</text>
+    <rect x="100" y="-9" width="220" height="8" rx="4" fill="rgba(128,128,128,0.28)"/>
+    <rect x="100" y="-9" width="48" height="8" rx="4" fill="#3fb950"/>
+    <text x="334" y="0" font-weight="700" fill="#3fb950">22%</text>
+    <text x="380" y="0" fill="#8e8d89">↻ 3d 4h · Thu 09:00</text>
+  </g>
+
+  <text x="796" y="244" font-size="10" text-anchor="end" fill="#5f5e5a">Preview · Claude desktop app</text>
 </svg>
