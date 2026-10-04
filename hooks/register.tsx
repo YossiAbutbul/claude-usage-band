@@ -214,12 +214,12 @@ export const register: Register = on => {
               {w ? <Text bold color={color}>{`${Math.round(pct)}%`}</Text> : <Text dimColor>—</Text>}
             </Box>
             {reset && (
-              // Tooltip: an absolute Box leaves the flow, so revealing it moves nothing; inverse
-              // text gives it an opaque chip that follows the theme.
+              // Tooltip: an absolute Box leaves the flow, so revealing it moves nothing. No color
+              // set, so the text takes the theme's own text color.
               <Box key={`reset-${kind}`} alignItems="center">
                 <Svg source={INFO_ICON} alt={`Resets in ${reset.left}, ${reset.when}`} width={INFO_SIZE} height={INFO_SIZE} />
                 <Box position="absolute" top={0} left={3} display="none" hover={{ display: 'flex' }}>
-                  <Text inverse wrap="truncate">{` resets in ${reset.left} · ${reset.when} `}</Text>
+                  <Text wrap="truncate">{`resets in ${reset.left} · ${reset.when}`}</Text>
                 </Box>
               </Box>
             )}
