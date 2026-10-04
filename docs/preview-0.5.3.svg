@@ -53,9 +53,8 @@
     <text x="334" y="0" font-weight="700" fill="#3fb950">22%</text>
   </g>
   <g transform="translate(0,314)">
-    <text x="32" y="0" fill="#8e8d89">Session</text>
-    <text x="100" y="0" font-weight="700" fill="#ecebe8">$1.24</text>
-    <text x="146" y="0" fill="#8e8d89">at API prices, covered by your plan</text>
+    <text x="32" y="0" font-weight="700" fill="#ecebe8">$1.24</text>
+    <text x="100" y="0" fill="#8e8d89">at API prices, covered by your plan</text>
   </g>
 
   <!-- Tooltip popover: compact, ending just past the info icon, opening toward the center -->

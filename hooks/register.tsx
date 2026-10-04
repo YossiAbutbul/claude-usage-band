@@ -336,9 +336,8 @@ export const register: Register = on => {
           {costText && (
             <Box key="cost" flexDirection="row" alignItems="center" gap={1}>
               <Box width={8}>
-                <Text dimColor>Session</Text>
+                <Text bold>{costText}</Text>
               </Box>
-              <Text bold>{costText}</Text>
               <Text dimColor>at API prices, covered by your plan</Text>
             </Box>
           )}
@@ -432,8 +431,7 @@ export const register: Register = on => {
         })}
         {costText && (
           <Box key="cost" flexDirection="row" gap={1}>
-            <Text dimColor>{'Session'.padEnd(LABEL_WIDTH)}</Text>
-            <Text bold>{costText}</Text>
+            <Text bold>{costText.padEnd(LABEL_WIDTH)}</Text>
             <Text dimColor>at API prices, covered by your plan</Text>
           </Box>
         )}

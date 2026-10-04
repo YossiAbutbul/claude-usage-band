@@ -4,7 +4,7 @@ A slim band above the Claude Code prompt that shows how much of your Claude plan
 
 **Works in the Claude desktop app** (the Code tab on Windows and macOS) **and in the Claude Code terminal.** In the desktop app it draws native rounded bars, icons and a hover tooltip; in the terminal it uses text characters.
 
-![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview-0.5.2.svg)
+![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview-0.5.3.svg)
 
 In the terminal it draws with text characters:
 
@@ -14,7 +14,7 @@ Expanded
 │ ✦ Plan usage  ◆ moderate                                           ⌄ │
 │ 5-hour  ████████████▋───────────  53%  ↻ 2h 14m · 14:30              │
 │ Weekly  █████▍──────────────────  22%  ↻ 3d 4h · Thu 09:00           │
-│ Session $1.24 at API prices, covered by your plan                    │
+│ $1.24   at API prices, covered by your plan                          │
 ╰──────────────────────────────────────────────────────────────────────╯
 
 Collapsed
