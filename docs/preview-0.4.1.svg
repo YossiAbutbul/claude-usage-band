@@ -26,8 +26,8 @@
     <rect x="252" y="-8.5" width="84" height="5" rx="2.5" fill="rgba(128,128,128,0.28)"/>
     <rect x="252" y="-8.5" width="18" height="5" rx="2.5" fill="#3fb950"/>
     <text x="346" y="0" font-weight="700" fill="#3fb950">22%</text>
-    <text x="406" y="0" fill="#8e8d89">session</text>
-    <text x="458" y="0" font-weight="700" fill="#ecebe8">$1.24</text>
+    <text x="406" y="0" fill="#8e8d89">session ≈</text>
+    <text x="470" y="0" font-weight="700" fill="#ecebe8">$1.24</text>
     <use href="#info" x="742" y="-11"/>
     <path d="M778.5 -1 782 -4.5l3.5 3.5" fill="none" stroke="#8e8d89" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
@@ -56,7 +56,7 @@
   <g transform="translate(0,314)">
     <text x="32" y="0" fill="#8e8d89">Session</text>
     <text x="100" y="0" font-weight="700" fill="#ecebe8">$1.24</text>
-    <text x="146" y="0" fill="#8e8d89">spent so far</text>
+    <text x="146" y="0" fill="#8e8d89">at API prices, covered by your plan</text>
   </g>
 
   <!-- Tooltip popover -->

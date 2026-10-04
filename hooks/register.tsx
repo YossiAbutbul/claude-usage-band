@@ -294,7 +294,7 @@ export const register: Register = on => {
               {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
               {costText && (
                 <Box key="cost" flexDirection="row" alignItems="center" gap={1}>
-                  <Text dimColor>session</Text>
+                  <Text dimColor>session ≈</Text>
                   <Text bold>{costText}</Text>
                 </Box>
               )}
@@ -320,7 +320,7 @@ export const register: Register = on => {
                 <Text dimColor>Session</Text>
               </Box>
               <Text bold>{costText}</Text>
-              <Text dimColor>spent so far</Text>
+              <Text dimColor>at API prices, covered by your plan</Text>
             </Box>
           )}
         </Box>
@@ -361,7 +361,7 @@ export const register: Register = on => {
                 )
               })
             )}
-            {costText && <Text dimColor>{'  ·  '}<Text bold>{costText}</Text></Text>}
+            {costText && <Text dimColor>{'  ·  ≈ '}<Text bold>{costText}</Text></Text>}
           </Box>
           <Button key="toggle" label="⌃" plain dimColor hotkey="u" onPress={toggle} />
         </Box>
@@ -415,7 +415,7 @@ export const register: Register = on => {
           <Box key="cost" flexDirection="row" gap={1}>
             <Text dimColor>{'Session'.padEnd(LABEL_WIDTH)}</Text>
             <Text bold>{costText}</Text>
-            <Text dimColor>spent so far</Text>
+            <Text dimColor>at API prices, covered by your plan</Text>
           </Box>
         )}
       </Box>
