@@ -34,53 +34,31 @@ Collapsed
 
 ## Installation
 
-### 1. Clone the repo
-
-macOS / Linux:
+Run these two commands in a terminal:
 
 ```bash
-git clone https://github.com/YossiAbutbul/claude-usage-band.git ~/.claude/mods/usage-band
+claude plugin marketplace add YossiAbutbul/claude-usage-band
+claude plugin install usage-band@claude-usage-band
 ```
 
-Windows (PowerShell):
+Then start a new Claude Code session. The band appears above the prompt and fills in after Claude's first reply.
 
-```powershell
-git clone https://github.com/YossiAbutbul/claude-usage-band.git "$env:USERPROFILE\.claude\mods\usage-band"
-```
-
-### 2. Load it in every session
-
-Open `~/.claude/settings.json` (on Windows: `%USERPROFILE%\.claude\settings.json`) and add the folder under `env`:
-
-```json
-{
-  "env": {
-    "CLAUDE_CODE_PLUGIN_DIRS": "~/.claude/mods/usage-band"
-  }
-}
-```
-
-If you already have an `env` block, add the `CLAUDE_CODE_PLUGIN_DIRS` line to it. To load several plugin folders, separate them with `:` on macOS/Linux or `;` on Windows.
-
-This works for the terminal and for the Claude desktop app.
-
-### 3. Restart Claude Code
-
-Start a new session. The band appears above the prompt and fills in after Claude's first reply.
+This works for the terminal and for the Claude desktop app, since both read the same installed plugins.
 
 ### Try it once without installing
 
 To load it for a single terminal session only:
 
 ```bash
-claude --plugin-dir ~/.claude/mods/usage-band
+git clone https://github.com/YossiAbutbul/claude-usage-band.git
+claude --plugin-dir ./claude-usage-band
 ```
 
 ## Usage
 
 | Action | How |
 | --- | --- |
-| Collapse or expand (desktop app) | Click **collapse** / **expand** on the band |
+| Collapse or expand (desktop app) | Click **collapse ⌄** / **expand ⌃** on the band |
 | Collapse or expand (terminal) | Click **⌄** / **⌃** on the band |
 | Collapse or expand from the prompt | Type `/usage-band` |
 | Keyboard (terminal) | Focus the band, then press `u` |
@@ -99,25 +77,29 @@ All settings are constants at the top of [`hooks/register.tsx`](hooks/register.t
 | `level()` | Color thresholds and colors | 50% / 80% |
 | `pill()` sizes | Bar size in the desktop app | `84×5` collapsed, `220×8` expanded |
 
-Claude Code reloads the plugin when you save the file.
+Fork the repo, change the constants, and install from your fork: `claude plugin marketplace add <you>/claude-usage-band`.
 
 ## Updating
 
 ```bash
-cd ~/.claude/mods/usage-band
-git pull
+claude plugin marketplace update claude-usage-band
+claude plugin update usage-band@claude-usage-band
 ```
+
+Then start a new session.
 
 ## Uninstalling
 
-1. Remove the `CLAUDE_CODE_PLUGIN_DIRS` line from `~/.claude/settings.json`.
-2. Delete the `~/.claude/mods/usage-band` folder.
+```bash
+claude plugin uninstall usage-band@claude-usage-band
+claude plugin marketplace remove claude-usage-band
+```
 
 ## Troubleshooting
 
-- **The band doesn't appear.** Check `claude --version` is 2.1.286 or newer, and that the path in `CLAUDE_CODE_PLUGIN_DIRS` points to the folder that contains `.claude-plugin/`. Start a new session after editing settings.
+- **The band doesn't appear.** Check `claude --version` is 2.1.286 or newer and that `claude plugin list` shows `usage-band@claude-usage-band` as enabled. Then start a new session.
 - **It says "waiting for first response…".** Send any message; the figures arrive with Claude's reply. If it stays there, your account isn't on a subscription plan.
-- **The band shows twice.** The plugin is loaded from two places, for example from `CLAUDE_CODE_PLUGIN_DIRS` and a `--plugin-dir` flag. Remove one.
+- **The band shows twice.** The plugin is loaded from two places, for example the installed plugin plus a `--plugin-dir` flag. Remove one.
 - **Errors.** Run `claude --debug`; lines starting with `usage-band:` explain what failed.
 
 ## License
