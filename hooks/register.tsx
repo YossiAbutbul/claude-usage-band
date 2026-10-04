@@ -45,10 +45,13 @@ const chevron = (dir: 'up' | 'down') =>
 
 const INFO_SIZE = 14
 // Tooltip widths in cells: the expanded table (padding, dot, label 7, time 8, clock up to 9,
-// gaps) and the collapsed one-line form; and the 14px info icon's width in cells.
+// gaps) and the collapsed one-line form; the 14px info icon's width in cells and the gap
+// before it. And the hover group that ties the icon to its tooltip.
 const TIP_TABLE_WIDTH = 30
 const TIP_ROW_WIDTH = 46
 const INFO_CELLS = 2
+const TIP_GAP = 2
+const TIP_SCOPE = 'usage-band-resets'
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
   `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
@@ -227,55 +230,63 @@ export const register: Register = on => {
 
         return reset && w ? [{ kind, label, color: level(w.percentUsed).color, ...reset }] : []
       })
+      // The desktop opens an absolute Box from its parent's left edge and ignores left/right
+      // offsets, so the tooltip cannot hang off the icon: it would run off the band's right side
+      // and under the panel beside the transcript. Instead an empty anchor Box sits just left of
+      // the icon, as wide as the tooltip less the icon and gap; the tooltip opens from its left
+      // edge and ends at the icon's right edge. The icon and the tooltip share a hover group, so
+      // hovering the icon reveals it. The anchor shrinks first when the band is narrow.
+      const tipWidth = collapsed ? TIP_ROW_WIDTH : TIP_TABLE_WIDTH
+      const tip = collapsed ? (
+        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
+          <Text dimColor>Resets in</Text>
+          {resets.map((r, i) => (
+            <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
+              {i > 0 && <Text dimColor>·</Text>}
+              <Text color={r.color}>●</Text>
+              <Text dimColor>{r.label}</Text>
+              <Text bold>{r.leftCompact}</Text>
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="column" paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
+          <Text dimColor>Resets in</Text>
+          {resets.map(r => (
+            <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
+              <Text color={r.color}>●</Text>
+              <Box width={7}>
+                <Text dimColor>{r.label}</Text>
+              </Box>
+              <Box width={8}>
+                <Text bold>{r.left}</Text>
+              </Box>
+              <Text dimColor>{r.when}</Text>
+            </Box>
+          ))}
+        </Box>
+      )
+      const resetAnchor = resets.length > 0 && (
+        <Box key="reset-anchor" width={tipWidth - INFO_CELLS - TIP_GAP} flexShrink={1}>
+          {tip}
+        </Box>
+      )
       const resetInfo = resets.length > 0 && (
-        <Box key="reset-info" alignItems="center">
+        <Box key="reset-info" alignItems="center" hover={{ scope: TIP_SCOPE }}>
           <Svg
             source={INFO_ICON}
             alt={resets.map(r => `${r.label} resets in ${r.left}, ${r.when}`).join('; ')}
             width={INFO_SIZE}
             height={INFO_SIZE}
           />
-          {/* The desktop anchors an absolute Box at its parent's left edge and opens it to the
-              right (a `right` offset is not honored), so a tooltip there runs off the band's
-              right side and under whatever panel sits beside the transcript. Each tooltip gets a
-              fixed width and a negative `left` of that width less the icon's own, so its right
-              edge lines up with the icon's right edge and it opens toward the band's free space. */}
-          {collapsed ? (
-            <Box position="absolute" top={0} left={-(TIP_ROW_WIDTH - INFO_CELLS)} width={TIP_ROW_WIDTH} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
-              <Text dimColor>Resets in</Text>
-              {resets.map((r, i) => (
-                <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
-                  {i > 0 && <Text dimColor>·</Text>}
-                  <Text color={r.color}>●</Text>
-                  <Text dimColor>{r.label}</Text>
-                  <Text bold>{r.leftCompact}</Text>
-                </Box>
-              ))}
-            </Box>
-          ) : (
-            <Box position="absolute" top={0} left={-(TIP_TABLE_WIDTH - INFO_CELLS)} width={TIP_TABLE_WIDTH} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
-              <Text dimColor>Resets in</Text>
-              {resets.map(r => (
-                <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
-                  <Text color={r.color}>●</Text>
-                  <Box width={7}>
-                    <Text dimColor>{r.label}</Text>
-                  </Box>
-                  <Box width={8}>
-                    <Text bold>{r.left}</Text>
-                  </Box>
-                  <Text dimColor>{r.when}</Text>
-                </Box>
-              ))}
-            </Box>
-          )}
         </Box>
       )
 
       // Chevron alone: a Button's label is text only, so it is drawn as an image.
 
       const toggleControl = (
-        <Box flexDirection="row" alignItems="center" gap={2}>
+        <Box flexDirection="row" alignItems="center" gap={TIP_GAP} flexShrink={1}>
+          {resetAnchor}
           {resetInfo}
           {/* A Button's label is text only. The chevron image sets the control's size; a blank
               Button (a braille blank keeps its width) sits on top in an absolute Box spanning the
