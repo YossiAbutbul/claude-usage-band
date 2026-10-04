@@ -35,6 +35,13 @@ const PILL_TRACK = 'rgba(128,128,128,0.28)'
 // A 1px hairline stretched to the slot's width: separates the band from the app's bar below it.
 // An outlined "i", drawn as a plain image. The reset detail beside it is revealed by the
 // surface's own hover (no sandboxed frame, so no opaque box behind the icon).
+// The collapse toggle's chevron: a rounded 1.75px stroke, the same gray as the info icon.
+const CHEVRON_SIZE = 16
+const chevron = (dir: 'up' | 'down') =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">` +
+  `<path d="${dir === 'up' ? 'M4.5 10 8 6.5l3.5 3.5' : 'M4.5 6.5 8 10l3.5-3.5'}" fill="none" stroke="#8e8d89" ` +
+  `stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+
 const INFO_SIZE = 14
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
@@ -221,7 +228,14 @@ export const register: Register = on => {
       const toggleControl = (
         <Box flexDirection="row" alignItems="center" gap={2}>
           {resetInfo}
-          <Button key="toggle" label={collapsed ? '∧' : '∨'} plain dimColor onPress={toggle} />
+          {/* A Button's label is text only, so the chevron is drawn as an image and a blank
+              Button (braille blanks keep their width) is laid over it as the click target. */}
+          <Box key="toggle-wrap" alignItems="center" justifyContent="center" width={2}>
+            <Svg source={chevron(collapsed ? 'up' : 'down')} alt={collapsed ? 'Expand' : 'Collapse'} width={CHEVRON_SIZE} height={CHEVRON_SIZE} />
+            <Box position="absolute" top={0} left={0}>
+              <Button key="toggle" label={'⠀⠀'} plain onPress={toggle} />
+            </Box>
+          </Box>
         </Box>
       )
 
