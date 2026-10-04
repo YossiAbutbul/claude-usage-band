@@ -213,9 +213,10 @@ export const register: Register = on => {
     // Desktop: SVG pills instead of box-drawing glyphs, which gap in a proportional font.
     if (e.surface === 'desktop') {
       const { Box, Text, Button, Svg } = $.ui.resolve(e)
-      // Collapsed: full bars from 90 cells, short bars from 64, percentages alone below that.
+      // Collapsed: full bars from 110 cells, short bars from 80, percentages alone below that.
       // Expanded: bars shrink with the band, from 220px down to 72px.
-      const pillW = collapsed ? (cols >= 90 ? 84 : cols >= 64 ? 48 : 0) : clamp(Math.round((cols - 30) * 7), 72, 220)
+      // Collapsed thresholds leave room for the tooltip's hover strip beside the chevron.
+      const pillW = collapsed ? (cols >= 110 ? 84 : cols >= 80 ? 48 : 0) : clamp(Math.round((cols - 30) * 7), 72, 220)
       const pillH = collapsed ? 5 : 8
 
 
@@ -290,7 +291,7 @@ export const register: Register = on => {
         const color = w ? level(pct).color : PILL_TRACK
 
         return (
-          <Box key={kind} flexDirection="row" alignItems="center" gap={1}>
+          <Box key={kind} flexDirection="row" alignItems="center" gap={1} flexShrink={0}>
             <Box width={collapsed ? 3 : 8}>
               <Text dimColor>{collapsed ? short : label}</Text>
             </Box>
@@ -307,13 +308,13 @@ export const register: Register = on => {
       if (collapsed) {
         return (
           <Box flexDirection="row" alignItems="center" justifyContent="space-between" paddingX={1}>
-            <Box flexDirection="row" alignItems="center" gap={cols >= 64 ? 3 : 2}>
+            <Box flexDirection="row" alignItems="center" gap={cols >= 100 ? 3 : 2} flexShrink={1}>
               <Text color={status?.color ?? 'gray'}>✦</Text>
               {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
+              {/* The cost alone, in one Text that never wraps; the $ says what it is. */}
               {costText && (
-                <Box key="cost" flexDirection="row" alignItems="center" gap={1}>
-                  <Text dimColor>session ≈</Text>
-                  <Text bold>{costText}</Text>
+                <Box key="cost" flexShrink={0}>
+                  <Text bold wrap="truncate">{costText}</Text>
                 </Box>
               )}
             </Box>
@@ -379,7 +380,7 @@ export const register: Register = on => {
                 )
               })
             )}
-            {costText && <Text dimColor>{'  ·  ≈ '}<Text bold>{costText}</Text></Text>}
+            {costText && <Text dimColor>{'  ·  '}<Text bold>{costText}</Text></Text>}
           </Box>
           <Button key="toggle" label="⌃" plain dimColor hotkey="u" onPress={toggle} />
         </Box>
