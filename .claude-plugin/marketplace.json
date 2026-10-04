@@ -1,0 +1,11 @@
+{
+  "name": "claude-usage-band",
+  "owner": { "name": "Yossi Abutbul" },
+  "plugins": [
+    {
+      "name": "usage-band",
+      "source": "./",
+      "description": "Band above the prompt showing 5-hour and weekly Claude plan usage as progress bars"
+    }
+  ]
+}
