@@ -193,10 +193,10 @@ export const register: Register = on => {
         </Box>
       )
 
-      // Word and chevron in one label: a Button's label is text only, so the chevron is a glyph.
+      // Chevron alone: a Button's label is text only, so it is a glyph.
       // ∧/∨ sit on the x-height in Segoe UI and system-ui; ⌃/⌄ ride high and low.
       const toggleControl = (
-        <Button key="toggle" label={collapsed ? 'expand ∧' : 'collapse ∨'} plain dimColor onPress={toggle} />
+        <Button key="toggle" label={collapsed ? '∧' : '∨'} plain dimColor onPress={toggle} />
       )
 
       const windowRow = ({ kind, short, label, w }: (typeof rows)[number]) => {
@@ -214,10 +214,12 @@ export const register: Register = on => {
               {w ? <Text bold color={color}>{`${Math.round(pct)}%`}</Text> : <Text dimColor>—</Text>}
             </Box>
             {reset && (
-              <Box key={`reset-${kind}`} flexDirection="row" alignItems="center" gap={1}>
+              // Tooltip: an absolute Box leaves the flow, so revealing it moves nothing; inverse
+              // text gives it an opaque chip that follows the theme.
+              <Box key={`reset-${kind}`} alignItems="center">
                 <Svg source={INFO_ICON} alt={`Resets in ${reset.left}, ${reset.when}`} width={INFO_SIZE} height={INFO_SIZE} />
-                <Box display="none" hover={{ display: 'flex' }}>
-                  <Text dimColor>{`resets in ${reset.left} · ${reset.when}`}</Text>
+                <Box position="absolute" top={0} left={3} display="none" hover={{ display: 'flex' }}>
+                  <Text inverse wrap="truncate">{` resets in ${reset.left} · ${reset.when} `}</Text>
                 </Box>
               </Box>
             )}
