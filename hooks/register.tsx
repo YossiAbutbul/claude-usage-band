@@ -45,12 +45,9 @@ const chevron = (dir: 'up' | 'down') =>
 
 const INFO_SIZE = 14
 // Tooltip widths in cells: the expanded table (padding, dot, label 7, time 8, clock up to 9,
-// gaps) and the collapsed one-line form; the 14px info icon's width in cells and the gap
-// before it. And the hover group that ties the icon to its tooltip.
+// gaps) and the collapsed one-line form. And the hover group that ties the icon to its tooltip.
 const TIP_TABLE_WIDTH = 30
 const TIP_ROW_WIDTH = 46
-const INFO_CELLS = 2
-const TIP_GAP = 2
 const TIP_SCOPE = 'usage-band-resets'
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
@@ -232,10 +229,10 @@ export const register: Register = on => {
       })
       // The desktop opens an absolute Box from its parent's left edge and ignores left/right
       // offsets, so the tooltip cannot hang off the icon: it would run off the band's right side
-      // and under the panel beside the transcript. Instead an empty anchor Box sits just left of
-      // the icon, as wide as the tooltip less the icon and gap; the tooltip opens from its left
-      // edge and ends at the icon's right edge. The icon and the tooltip share a hover group, so
-      // hovering the icon reveals it. The anchor shrinks first when the band is narrow.
+      // and under the panel beside the transcript. It hangs instead from a zero-width anchor at
+      // the end of the band's content, opening right into the free space before the icon. The
+      // anchor takes no room, so the layout is untouched. The icon and the tooltip share a hover
+      // group, so hovering the icon reveals it.
       const tipWidth = collapsed ? TIP_ROW_WIDTH : TIP_TABLE_WIDTH
       const tip = collapsed ? (
         <Box position="absolute" top={0} left={0} width={tipWidth} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ scope: TIP_SCOPE, display: 'flex' }}>
@@ -266,8 +263,8 @@ export const register: Register = on => {
           ))}
         </Box>
       )
-      const resetAnchor = resets.length > 0 && (
-        <Box key="reset-anchor" width={tipWidth - INFO_CELLS - TIP_GAP} flexShrink={1}>
+      const tipAnchor = resets.length > 0 && (
+        <Box key="tip-anchor" width={0}>
           {tip}
         </Box>
       )
@@ -285,8 +282,7 @@ export const register: Register = on => {
       // Chevron alone: a Button's label is text only, so it is drawn as an image.
 
       const toggleControl = (
-        <Box flexDirection="row" alignItems="center" gap={TIP_GAP} flexShrink={1}>
-          {resetAnchor}
+        <Box flexDirection="row" alignItems="center" gap={2}>
           {resetInfo}
           {/* A Button's label is text only. The chevron image sets the control's size; a blank
               Button (a braille blank keeps its width) sits on top in an absolute Box spanning the
@@ -333,6 +329,7 @@ export const register: Register = on => {
                   <Text bold>{costText}</Text>
                 </Box>
               )}
+              {tipAnchor}
             </Box>
             {toggleControl}
           </Box>
@@ -345,6 +342,7 @@ export const register: Register = on => {
             <Box flexDirection="row" alignItems="center" gap={2}>
               <Text bold>✦ Plan usage</Text>
               {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
+              {tipAnchor}
             </Box>
             {toggleControl}
           </Box>
