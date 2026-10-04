@@ -50,9 +50,6 @@ const INFO_ICON =
   `<circle cx="7" cy="4.3" r="0.8" fill="#8e8d89"/>` +
   `</svg>`
 
-const DIVIDER =
-  `<svg xmlns="http://www.w3.org/2000/svg" width="4000" height="1" viewBox="0 0 4000 1" preserveAspectRatio="none">` +
-  `<rect width="4000" height="1" fill="rgba(128,128,128,0.25)"/></svg>`
 const pill = (pct: number, color: string, width: number, height: number) => {
   const r = height / 2
   const fill = pct <= 0 ? 0 : Math.max(height, Math.round((Math.min(100, pct) / 100) * width))
@@ -198,11 +195,6 @@ export const register: Register = on => {
       const pillW = collapsed ? 84 : 220
       const pillH = collapsed ? 5 : 8
 
-      const divider = (
-        <Box key="divider" marginTop={1}>
-          <Svg source={DIVIDER} alt="Divider" height={1} />
-        </Box>
-      )
 
       // Chevron alone: a Button's label is text only, so it is a glyph.
       // ∧/∨ sit on the x-height in Segoe UI and system-ui; ⌃/⌄ ride high and low.
@@ -260,32 +252,26 @@ export const register: Register = on => {
 
       if (collapsed) {
         return (
-          <Box flexDirection="column">
-            <Box flexDirection="row" alignItems="center" justifyContent="space-between" paddingX={1}>
-              <Box flexDirection="row" alignItems="center" gap={3}>
-                <Text color={status?.color ?? 'gray'}>✦</Text>
-                {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
-              </Box>
-              {toggleControl}
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between" paddingX={1}>
+            <Box flexDirection="row" alignItems="center" gap={3}>
+              <Text color={status?.color ?? 'gray'}>✦</Text>
+              {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
             </Box>
-            {divider}
+            {toggleControl}
           </Box>
         )
       }
 
       return (
-        <Box flexDirection="column">
-          <Box flexDirection="column" paddingX={1} gap={0}>
-            <Box flexDirection="row" alignItems="center" justifyContent="space-between">
-              <Box flexDirection="row" alignItems="center" gap={2}>
-                <Text bold>✦ Plan usage</Text>
-                {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
-              </Box>
-              {toggleControl}
+        <Box flexDirection="column" paddingX={1} gap={0}>
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between">
+            <Box flexDirection="row" alignItems="center" gap={2}>
+              <Text bold>✦ Plan usage</Text>
+              {status ? <Text color={status.color}>{status.badge}</Text> : <Text dimColor>waiting for first response…</Text>}
             </Box>
-            {rows.map(windowRow)}
+            {toggleControl}
           </Box>
-          {divider}
+          {rows.map(windowRow)}
         </Box>
       )
     }
