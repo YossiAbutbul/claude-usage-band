@@ -230,21 +230,39 @@ export const register: Register = on => {
             width={INFO_SIZE}
             height={INFO_SIZE}
           />
-          <Box position="absolute" top={0} right={3} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
-            <Text dimColor>Resets in</Text>
-            {resets.map(r => (
-              <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
-                <Text color={r.color}>●</Text>
-                <Box width={7}>
+          {/* The tooltip stays inside the band, which clips anything drawn past its edges.
+              Expanded: the table opens downward from the icon's row into the free space right
+              of the bars. Collapsed: the band is one row, so the tooltip is one line on the
+              icon's own row, to its left. */}
+          {collapsed ? (
+            <Box position="absolute" top={0} right={3} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
+              <Text dimColor>Resets in</Text>
+              {resets.map((r, i) => (
+                <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
+                  {i > 0 && <Text dimColor>·</Text>}
+                  <Text color={r.color}>●</Text>
                   <Text dimColor>{r.label}</Text>
+                  <Text bold>{r.leftCompact}</Text>
                 </Box>
-                <Box width={8}>
-                  <Text bold>{r.left}</Text>
+              ))}
+            </Box>
+          ) : (
+            <Box position="absolute" top={1} right={3} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
+              <Text dimColor>Resets in</Text>
+              {resets.map(r => (
+                <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
+                  <Text color={r.color}>●</Text>
+                  <Box width={7}>
+                    <Text dimColor>{r.label}</Text>
+                  </Box>
+                  <Box width={8}>
+                    <Text bold>{r.left}</Text>
+                  </Box>
+                  <Text dimColor>{r.when}</Text>
                 </Box>
-                <Text dimColor>{r.when}</Text>
-              </Box>
-            ))}
-          </Box>
+              ))}
+            </Box>
+          )}
         </Box>
       )
 
