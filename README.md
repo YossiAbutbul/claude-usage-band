@@ -2,6 +2,8 @@
 
 A slim band above the Claude Code prompt that shows how much of your Claude plan you've used: the **5-hour** window and the **weekly** limit, each with a progress bar, a percentage and a countdown to its reset.
 
+**Works in the Claude desktop app** (the Code tab on Windows and macOS) **and in the Claude Code terminal.** In the desktop app it draws native rounded bars, icons and a hover tooltip; in the terminal it uses text characters.
+
 ![usage-band in the Claude desktop app: collapsed, and expanded with the reset tooltip open](docs/preview.svg)
 
 In the terminal it draws with text characters:
@@ -24,12 +26,12 @@ Collapsed
 - **Color by level:** green under 50%, amber from 50–80%, red over 80%. The ✦ icon takes the color of the higher window.
 - **Reset countdown:** shows how long until each window resets, plus the clock time, updated every minute.
 - **Warning toast:** one notification when a window passes 90%, once per reset period.
-- **Collapse to one line:** **collapse ⌄** / **expand ⌃** switches between the full view and a single thin line. Your choice is remembered across sessions.
-- **Works in the terminal and the desktop app.**
+- **Collapse to one line:** the chevron switches between the full view and a single thin line. Your choice is remembered across sessions.
+- **Works in the Claude desktop app and the terminal:** one plugin, drawn natively for each. The desktop app gets smooth bars, an ⓘ tooltip with the reset times and a chevron button; the terminal gets text bars with the reset times inline.
 
 ## Requirements
 
-- **Claude Code 2.1.286 or newer.** Earlier versions don't support plugin hook modules or the events this band uses. Check with `claude --version`.
+- **Claude Code 2.1.286 or newer.** Earlier versions don't support plugin hook modules or the events this band uses. Check with `claude --version`. The Claude desktop app keeps its own copy of Claude Code up to date, so it already qualifies once the app is current.
 - **A Claude Pro or Max subscription.** The 5-hour and weekly figures only exist on subscription plans. With an API key, the band shows "waiting for first response…".
 
 ## Installation
