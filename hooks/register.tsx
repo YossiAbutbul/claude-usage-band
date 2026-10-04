@@ -170,9 +170,13 @@ export const register: Register = on => {
     return next(e)
   })
 
+  // The band shares this slot with what the app draws above the prompt (the desktop's git
+  // changes bar among it), so it draws on top of the app's own drawing rather than replacing it.
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     if (e.props.hasSurvey) return next(e)
 
+    const below = await next(e)
+    const band = await (async () => {
     const all = await read($, windows)
     const collapsed = await read($, isCollapsed)
     const at = (await read($, now)) || (await $.clock.now())
@@ -350,6 +354,17 @@ export const register: Register = on => {
           )
         })}
       </Box>
+    )
+    })()
+    const { Box } = $.ui.resolve(e)
+
+    return below ? (
+      <Box flexDirection="column">
+        {band}
+        {below}
+      </Box>
+    ) : (
+      band
     )
   })
 }
