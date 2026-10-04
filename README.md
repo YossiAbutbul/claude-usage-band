@@ -26,6 +26,7 @@ Collapsed
 - **Color by level:** green under 50%, amber from 50–80%, red over 80%. The ✦ icon takes the color of the higher window.
 - **Reset countdown:** shows how long until each window resets, plus the clock time, updated every minute.
 - **Warning toast:** one notification when a window passes 90%, once per reset period.
+- **Responsive:** the band sizes itself to the window. Bars shrink as it narrows, and on a narrow window the collapsed line keeps just the percentages.
 - **Collapse to one line:** the chevron switches between the full view and a single thin line. Your choice is remembered across sessions.
 - **Works in the Claude desktop app and the terminal:** one plugin, drawn natively for each. The desktop app gets smooth bars, an ⓘ tooltip with the reset times and a chevron button; the terminal gets text bars with the reset times inline.
 

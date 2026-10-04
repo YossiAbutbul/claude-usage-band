@@ -72,6 +72,8 @@ const meter = (pct: number, cells: number) => {
   return { filled, track }
 }
 
+const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n))
+
 const pad2 = (n: number) => String(n).padStart(2, '0')
 
 const countdown = (ms: number, compact = false) => {
@@ -188,11 +190,16 @@ export const register: Register = on => {
     const peak = Math.max(0, ...rows.map(r => r.w?.percentUsed ?? 0))
     const status = all.length === 0 ? null : level(peak)
     const toggle = () => setCollapsed($, !collapsed)
+    // Responsive: the band's width in cells (the terminal's width, or the transcript column's
+    // on desktop) drives every size below, so it never wraps or crowds on a narrow window.
+    const cols = e.props.bodyColumns || 100
 
     // Desktop: SVG pills instead of box-drawing glyphs, which gap in a proportional font.
     if (e.surface === 'desktop') {
       const { Box, Text, Button, Svg } = $.ui.resolve(e)
-      const pillW = collapsed ? 84 : 220
+      // Collapsed: full bars from 90 cells, short bars from 64, percentages alone below that.
+      // Expanded: bars shrink with the band, from 220px down to 72px.
+      const pillW = collapsed ? (cols >= 90 ? 84 : cols >= 64 ? 48 : 0) : clamp(Math.round((cols - 30) * 7), 72, 220)
       const pillH = collapsed ? 5 : 8
 
 
@@ -259,7 +266,9 @@ export const register: Register = on => {
             <Box width={collapsed ? 3 : 8}>
               <Text dimColor>{collapsed ? short : label}</Text>
             </Box>
-            <Svg source={pill(pct, color, pillW, pillH)} alt={`${label} ${Math.round(pct)}% used`} width={pillW} height={pillH} />
+            {pillW > 0 && (
+              <Svg source={pill(pct, color, pillW, pillH)} alt={`${label} ${Math.round(pct)}% used`} width={pillW} height={pillH} />
+            )}
             <Box width={5}>
               {w ? <Text bold color={color}>{`${Math.round(pct)}%`}</Text> : <Text dimColor>—</Text>}
             </Box>
@@ -270,7 +279,7 @@ export const register: Register = on => {
       if (collapsed) {
         return (
           <Box flexDirection="row" alignItems="center" justifyContent="space-between" paddingX={1}>
-            <Box flexDirection="row" alignItems="center" gap={3}>
+            <Box flexDirection="row" alignItems="center" gap={cols >= 64 ? 3 : 2}>
               <Text color={status?.color ?? 'gray'}>✦</Text>
               {all.length === 0 ? <Text dimColor>Plan usage · waiting for first response…</Text> : rows.map(windowRow)}
             </Box>
@@ -294,6 +303,10 @@ export const register: Register = on => {
     }
 
     const { Box, Text, Button } = $.ui.resolve(e)
+    // Terminal: bars give up cells first, then the collapsed line drops its bars and countdowns.
+    const barCells = clamp(cols - 44, 8, BAR_CELLS)
+    const miniCells = cols >= 96 ? MINI_CELLS : cols >= 72 ? 6 : 0
+    const showCountdown = cols >= 60
 
     // One thin line: ✦ 5h ━━━━━━╸───── 53% ↻2h14m  ·  7d ━━╸───────── 22% ↻3d4h      ⌃
     if (collapsed) {
@@ -306,9 +319,9 @@ export const register: Register = on => {
             ) : (
               rows.map(({ kind, short, w }, i) => {
                 const sep = i > 0 ? '  ·  ' : ''
-                if (!w) return <Text key={kind} dimColor>{`${sep}${short} ${'─'.repeat(MINI_CELLS)} —`}</Text>
+                if (!w) return <Text key={kind} dimColor>{`${sep}${short} ${'─'.repeat(miniCells)} —`}</Text>
                 const { color } = level(w.percentUsed)
-                const { filled, track } = thinMeter(w.percentUsed, MINI_CELLS)
+                const { filled, track } = thinMeter(w.percentUsed, miniCells)
                 const reset = resetParts(kind, at, w.resetsAt)
 
                 return (
@@ -318,7 +331,7 @@ export const register: Register = on => {
                     <Text color={color}>{filled}</Text>
                     <Text dimColor>{track}</Text>
                     <Text bold color={color}>{` ${Math.round(w.percentUsed)}%`.padEnd(5)}</Text>
-                    {reset && <Text dimColor>{`↻ ${reset.leftCompact}`}</Text>}
+                    {reset && showCountdown && <Text dimColor>{`↻ ${reset.leftCompact}`}</Text>}
                   </Text>
                 )
               })
@@ -344,14 +357,14 @@ export const register: Register = on => {
             return (
               <Box key={kind} flexDirection="row" gap={1}>
                 <Text dimColor>{label.padEnd(LABEL_WIDTH)}</Text>
-                <Text dimColor>{'─'.repeat(BAR_CELLS)}</Text>
+                <Text dimColor>{'─'.repeat(barCells)}</Text>
                 <Text dimColor>  —</Text>
               </Box>
             )
           }
 
           const { color } = level(w.percentUsed)
-          const { filled, track } = meter(w.percentUsed, BAR_CELLS)
+          const { filled, track } = meter(w.percentUsed, barCells)
           const reset = resetParts(kind, at, w.resetsAt)
 
           return (
@@ -366,7 +379,7 @@ export const register: Register = on => {
                 <Text dimColor>
                   {'  ↻ '}
                   <Text>{reset.left}</Text>
-                  {` · ${reset.when}`}
+                  {showCountdown ? ` · ${reset.when}` : ''}
                 </Text>
               )}
             </Box>
