@@ -44,10 +44,11 @@ const chevron = (dir: 'up' | 'down') =>
   `stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 
 const INFO_SIZE = 14
-// Tooltip widths in cells: the expanded table (dot, label 7, time 8, clock up to 9, gaps,
-// padding) and the collapsed one-line form.
-const TIP_TABLE_WIDTH = 32
-const TIP_ROW_WIDTH = 48
+// Tooltip widths in cells: the expanded table (padding, dot, label 7, time 8, clock up to 9,
+// gaps) and the collapsed one-line form; and the 14px info icon's width in cells.
+const TIP_TABLE_WIDTH = 30
+const TIP_ROW_WIDTH = 46
+const INFO_CELLS = 2
 const INFO_ICON =
   `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">` +
   `<g stroke="#8e8d89" fill="none" stroke-width="1.2" stroke-linecap="round">` +
@@ -237,10 +238,10 @@ export const register: Register = on => {
           {/* The desktop anchors an absolute Box at its parent's left edge and opens it to the
               right (a `right` offset is not honored), so a tooltip there runs off the band's
               right side and under whatever panel sits beside the transcript. Each tooltip gets a
-              fixed width and a negative `left` of that width plus one cell, so it ends just left
-              of the icon and opens toward the band's free space. */}
+              fixed width and a negative `left` of that width less the icon's own, so its right
+              edge lines up with the icon's right edge and it opens toward the band's free space. */}
           {collapsed ? (
-            <Box position="absolute" top={0} left={-(TIP_ROW_WIDTH + 1)} width={TIP_ROW_WIDTH} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
+            <Box position="absolute" top={0} left={-(TIP_ROW_WIDTH - INFO_CELLS)} width={TIP_ROW_WIDTH} flexDirection="row" alignItems="center" gap={1} paddingX={1} display="none" hover={{ display: 'flex' }}>
               <Text dimColor>Resets in</Text>
               {resets.map((r, i) => (
                 <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
@@ -252,7 +253,7 @@ export const register: Register = on => {
               ))}
             </Box>
           ) : (
-            <Box position="absolute" top={0} left={-(TIP_TABLE_WIDTH + 1)} width={TIP_TABLE_WIDTH} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
+            <Box position="absolute" top={0} left={-(TIP_TABLE_WIDTH - INFO_CELLS)} width={TIP_TABLE_WIDTH} flexDirection="column" paddingX={1} display="none" hover={{ display: 'flex' }}>
               <Text dimColor>Resets in</Text>
               {resets.map(r => (
                 <Box key={`tip-${r.kind}`} flexDirection="row" alignItems="center" gap={1}>
