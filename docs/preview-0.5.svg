@@ -59,22 +59,22 @@
     <text x="146" y="0" fill="#8e8d89">at API prices, covered by your plan</text>
   </g>
 
-  <!-- Tooltip popover -->
+  <!-- Tooltip popover: compact, ending just past the info icon, opening toward the center -->
   <g filter="url(#shadow)">
-    <rect x="540" y="114" width="250" height="82" rx="8" fill="#30302d" stroke="#45443f"/>
+    <rect x="556" y="114" width="214" height="82" rx="8" fill="#30302d" stroke="#45443f"/>
   </g>
-  <text x="556" y="137" fill="#8e8d89">Resets in</text>
+  <text x="572" y="137" fill="#8e8d89">Resets in</text>
   <g transform="translate(0,160)">
-    <circle cx="561" cy="-4.5" r="3.5" fill="#d29922"/>
-    <text x="572" y="0" fill="#8e8d89">5-hour</text>
-    <text x="634" y="0" font-weight="700" fill="#ecebe8">2h 41m</text>
-    <text x="704" y="0" fill="#8e8d89">14:30</text>
+    <circle cx="577" cy="-4.5" r="3.5" fill="#d29922"/>
+    <text x="588" y="0" fill="#8e8d89">5h</text>
+    <text x="612" y="0" font-weight="700" fill="#ecebe8">2h 41m</text>
+    <text x="676" y="0" fill="#8e8d89">14:30</text>
   </g>
   <g transform="translate(0,182)">
-    <circle cx="561" cy="-4.5" r="3.5" fill="#3fb950"/>
-    <text x="572" y="0" fill="#8e8d89">Weekly</text>
-    <text x="634" y="0" font-weight="700" fill="#ecebe8">15h 11m</text>
-    <text x="704" y="0" fill="#8e8d89">Mon 03:00</text>
+    <circle cx="577" cy="-4.5" r="3.5" fill="#3fb950"/>
+    <text x="588" y="0" fill="#8e8d89">7d</text>
+    <text x="612" y="0" font-weight="700" fill="#ecebe8">15h 11m</text>
+    <text x="676" y="0" fill="#8e8d89">Mon 03:00</text>
   </g>
   <path d="M743 196 749 203 755 196" fill="#30302d" stroke="#45443f"/>
   <rect x="742" y="194" width="14" height="3" fill="#30302d"/>
